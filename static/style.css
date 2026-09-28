@@ -1,0 +1,1008 @@
+
+:root {
+    --bg: #080808;
+    --bg-soft: #101010;
+    --card: rgba(22, 22, 22, 0.82);
+    --card-hover: rgba(30, 30, 30, 0.92);
+
+    --red: #b11226;
+    --red-bright: #e11d35;
+    --red-dark: #5f0b16;
+    --red-glow: rgba(177, 18, 38, 0.28);
+
+    --white: #f5f5f5;
+    --text: #d7d7d7;
+    --muted: #858585;
+
+    --border: rgba(255, 255, 255, 0.08);
+    --border-red: rgba(177, 18, 38, 0.35);
+
+    --radius: 22px;
+}
+
+
+/* -----------------------------
+   GLOBAL
+----------------------------- */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at 50% -20%,
+            rgba(177, 18, 38, 0.15),
+            transparent 45%
+        ),
+        linear-gradient(
+            180deg,
+            #080808 0%,
+            #0b0b0b 45%,
+            #050505 100%
+        );
+
+    color: var(--text);
+
+    font-family:
+        "Inter",
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    overflow-x: hidden;
+}
+
+
+/* -----------------------------
+   BACKGROUND EFFECTS
+----------------------------- */
+
+.background-glow {
+    position: fixed;
+
+    width: 500px;
+    height: 500px;
+
+    border-radius: 50%;
+
+    filter: blur(140px);
+
+    pointer-events: none;
+
+    z-index: -1;
+}
+
+.glow-one {
+    top: -250px;
+    left: -180px;
+    background: rgba(177, 18, 38, 0.13);
+}
+
+.glow-two {
+    right: -250px;
+    top: 45%;
+    background: rgba(120, 10, 25, 0.08);
+}
+
+
+/* -----------------------------
+   NAVBAR
+----------------------------- */
+
+.navbar {
+    height: 82px;
+
+    padding: 0 6%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-bottom: 1px solid var(--border);
+
+    background: rgba(5, 5, 5, 0.72);
+
+    backdrop-filter: blur(18px);
+
+    position: sticky;
+    top: 0;
+
+    z-index: 100;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.brand-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            145deg,
+            var(--red-bright),
+            var(--red-dark)
+        );
+
+    box-shadow:
+        0 0 25px rgba(177, 18, 38, 0.25);
+
+    font-size: 20px;
+}
+
+.brand-name {
+    color: var(--white);
+
+    font-size: 18px;
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+}
+
+.brand-name span,
+footer span {
+    color: var(--red-bright);
+}
+
+.brand-subtitle {
+    margin-top: 2px;
+
+    color: #666;
+
+    font-size: 8px;
+    font-weight: 600;
+
+    letter-spacing: 2px;
+}
+
+.nav-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    color: #777;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    letter-spacing: 1.5px;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #36c76f;
+
+    box-shadow:
+        0 0 10px rgba(54, 199, 111, 0.7);
+}
+
+
+/* -----------------------------
+   MAIN CONTAINER
+----------------------------- */
+
+.container {
+    width: min(1180px, 90%);
+
+    margin: auto;
+}
+
+
+/* -----------------------------
+   HERO
+----------------------------- */
+
+.hero {
+    padding: 105px 0 70px;
+
+    max-width: 850px;
+}
+
+.hero-badge {
+    display: inline-flex;
+
+    padding: 9px 14px;
+
+    border: 1px solid var(--border-red);
+
+    border-radius: 100px;
+
+    background: rgba(177, 18, 38, 0.08);
+
+    color: #c86672;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: 1.8px;
+}
+
+.hero h1 {
+    margin-top: 25px;
+
+    color: var(--white);
+
+    font-family:
+        "Playfair Display",
+        Georgia,
+        serif;
+
+    font-size: clamp(46px, 6vw, 78px);
+
+    line-height: 1.03;
+
+    letter-spacing: -2px;
+}
+
+.hero h1 span {
+    color: var(--red-bright);
+
+    text-shadow:
+        0 0 35px rgba(225, 29, 53, 0.18);
+}
+
+.hero-description {
+    max-width: 690px;
+
+    margin-top: 28px;
+
+    color: #858585;
+
+    font-size: 16px;
+
+    line-height: 1.8;
+}
+
+
+/* -----------------------------
+   SECTION HEADERS
+----------------------------- */
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section-label,
+.card-label {
+    color: #8e4b54;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 2px;
+}
+
+.section-header h2,
+.results-heading h2 {
+    margin-top: 9px;
+
+    color: var(--white);
+
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.film-icon {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    border: 1px solid var(--border-red);
+
+    color: var(--red-bright);
+
+    box-shadow:
+        0 0 30px rgba(177, 18, 38, 0.08);
+}
+
+
+/* -----------------------------
+   REVIEW INPUT
+----------------------------- */
+
+.review-card {
+    padding: 34px;
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(27, 27, 27, 0.88),
+            rgba(13, 13, 13, 0.88)
+        );
+
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.35);
+
+    backdrop-filter: blur(20px);
+}
+
+textarea {
+    width: 100%;
+    min-height: 190px;
+
+    margin-top: 30px;
+
+    padding: 22px;
+
+    resize: vertical;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 16px;
+
+    outline: none;
+
+    background: #0a0a0a;
+
+    color: var(--white);
+
+    font-family: inherit;
+
+    font-size: 15px;
+
+    line-height: 1.7;
+
+    transition: 0.25s;
+}
+
+textarea::placeholder {
+    color: #555;
+}
+
+textarea:focus {
+    border-color: rgba(177, 18, 38, 0.55);
+
+    box-shadow:
+        0 0 0 4px rgba(177, 18, 38, 0.07),
+        0 0 35px rgba(177, 18, 38, 0.08);
+}
+
+.input-footer {
+    margin-top: 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#characterCount {
+    color: #555;
+
+    font-size: 11px;
+}
+
+button {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    padding: 14px 21px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--red-bright),
+            var(--red)
+        );
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    letter-spacing: 0.4px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 10px 30px rgba(177, 18, 38, 0.22);
+
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 15px 35px rgba(177, 18, 38, 0.32);
+}
+
+.button-arrow {
+    font-size: 18px;
+}
+
+
+/* -----------------------------
+   LOADING
+----------------------------- */
+
+.loading {
+    padding: 45px 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 14px;
+
+    color: #777;
+
+    font-size: 13px;
+}
+
+.loader {
+    width: 18px;
+    height: 18px;
+
+    border: 2px solid #333;
+
+    border-top-color: var(--red-bright);
+
+    border-radius: 50%;
+
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.hidden {
+    display: none !important;
+}
+
+
+/* -----------------------------
+   RESULTS
+----------------------------- */
+
+.results {
+    padding: 90px 0 50px;
+}
+
+.results-heading {
+    display: flex;
+
+    align-items: end;
+
+    gap: 35px;
+
+    margin-bottom: 30px;
+}
+
+.analysis-line {
+    flex: 1;
+
+    height: 1px;
+
+    margin-bottom: 8px;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(177, 18, 38, 0.45),
+            transparent
+        );
+}
+
+
+/* -----------------------------
+   RESULT GRID
+----------------------------- */
+
+.result-grid {
+    display: grid;
+
+    grid-template-columns:
+        1.15fr
+        1fr
+        1fr;
+
+    gap: 18px;
+}
+
+.result-card,
+.large-card {
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(24, 24, 24, 0.9),
+            rgba(13, 13, 13, 0.9)
+        );
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.2);
+
+    backdrop-filter: blur(15px);
+
+    transition:
+        transform 0.25s,
+        border-color 0.25s;
+}
+
+.result-card:hover,
+.large-card:hover {
+    transform: translateY(-3px);
+
+    border-color: rgba(177, 18, 38, 0.22);
+}
+
+.result-card {
+    min-height: 250px;
+
+    padding: 28px;
+}
+
+.sentiment-card {
+    border-color: var(--border-red);
+}
+
+.sentiment-value {
+    margin-top: 25px;
+
+    color: var(--red-bright);
+
+    font-size: 30px;
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+.confidence-text {
+    margin-top: 5px;
+
+    color: #666;
+
+    font-size: 11px;
+}
+
+.confidence-bar {
+    width: 100%;
+    height: 5px;
+
+    margin-top: 18px;
+
+    overflow: hidden;
+
+    border-radius: 10px;
+
+    background: #242424;
+}
+
+.confidence-fill {
+    width: 0%;
+    height: 100%;
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--red-dark),
+            var(--red-bright)
+        );
+
+    transition: width 0.8s ease;
+}
+
+.confidence-value {
+    margin-top: 8px;
+
+    color: #aaa;
+
+    font-size: 12px;
+}
+
+.probabilities {
+    display: flex;
+
+    gap: 30px;
+
+    margin-top: 22px;
+}
+
+.probabilities div {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.probabilities span {
+    color: #555;
+
+    font-size: 10px;
+}
+
+.probabilities strong {
+    color: #bbb;
+
+    font-size: 13px;
+}
+
+
+/* -----------------------------
+   EMOTIONS
+----------------------------- */
+
+.emotion-list {
+    margin-top: 24px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 13px;
+}
+
+.emotion-item {
+    display: grid;
+
+    grid-template-columns: 75px 1fr 45px;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.emotion-name {
+    color: #aaa;
+
+    font-size: 11px;
+}
+
+.emotion-bar {
+    height: 5px;
+
+    overflow: hidden;
+
+    border-radius: 10px;
+
+    background: #242424;
+}
+
+.emotion-fill {
+    height: 100%;
+
+    border-radius: 10px;
+
+    background: var(--red);
+}
+
+.emotion-score {
+    color: #777;
+
+    font-size: 10px;
+
+    text-align: right;
+}
+
+
+/* -----------------------------
+   QUALITY
+----------------------------- */
+
+.quality-list {
+    margin-top: 24px;
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 18px;
+}
+
+.quality-item {
+    padding-bottom: 12px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.quality-item span {
+    display: block;
+
+    color: #555;
+
+    font-size: 9px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+}
+
+.quality-item strong {
+    display: block;
+
+    margin-top: 5px;
+
+    color: #bbb;
+
+    font-size: 13px;
+}
+
+
+/* -----------------------------
+   LARGE CARDS
+----------------------------- */
+
+.large-card {
+    margin-top: 18px;
+
+    padding: 30px;
+}
+
+
+/* -----------------------------
+   ASPECTS
+----------------------------- */
+
+.aspect-grid {
+    margin-top: 25px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(150px, 1fr));
+
+    gap: 12px;
+}
+
+.aspect-item {
+    padding: 17px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.aspect-name {
+    color: #777;
+
+    font-size: 10px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+}
+
+.aspect-sentiment {
+    margin-top: 7px;
+
+    color: var(--white);
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.aspect-confidence {
+    margin-top: 4px;
+
+    color: #666;
+
+    font-size: 10px;
+}
+
+
+/* -----------------------------
+   EXPLANATION
+----------------------------- */
+
+.explanation-intro {
+    margin-top: 10px;
+
+    color: #666;
+
+    font-size: 12px;
+}
+
+.influence-grid {
+    margin-top: 30px;
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 40px;
+}
+
+.influence-grid h3 {
+    margin-bottom: 15px;
+
+    font-size: 12px;
+}
+
+.positive-title {
+    color: #7bbf91;
+}
+
+.negative-title {
+    color: #d16b78;
+}
+
+.word-list {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 9px;
+}
+
+.word-tag {
+    padding: 8px 11px;
+
+    border-radius: 8px;
+
+    font-size: 11px;
+
+    background: rgba(255, 255, 255, 0.04);
+
+    color: #aaa;
+
+    border: 1px solid var(--border);
+}
+
+
+/* -----------------------------
+   FOOTER
+----------------------------- */
+
+footer {
+    padding: 70px 0 45px;
+
+    margin-top: 60px;
+
+    border-top: 1px solid var(--border);
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    color: #555;
+
+    font-size: 11px;
+}
+
+footer div {
+    color: #777;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+footer p {
+    color: #444;
+
+    font-size: 10px;
+}
+
+
+/* -----------------------------
+   RESPONSIVE
+----------------------------- */
+
+@media (max-width: 850px) {
+
+    .nav-status {
+        display: none;
+    }
+
+    .hero {
+        padding-top: 70px;
+    }
+
+    .result-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .influence-grid {
+        grid-template-columns: 1fr;
+
+        gap: 30px;
+    }
+
+    footer {
+        flex-direction: column;
+
+        gap: 15px;
+
+        text-align: center;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .navbar {
+        padding: 0 5%;
+    }
+
+    .container {
+        width: 92%;
+    }
+
+    .hero h1 {
+        font-size: 43px;
+
+        letter-spacing: -1px;
+    }
+
+    .review-card {
+        padding: 22px;
+    }
+
+    .input-footer {
+        align-items: flex-end;
+
+        gap: 15px;
+    }
+
+    button {
+        padding: 13px 16px;
+    }
+
+    .results-heading {
+        display: block;
+    }
+
+    .analysis-line {
+        margin-top: 15px;
+    }
+
+}

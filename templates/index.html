@@ -1,0 +1,317 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Intelligent Movie Review Analyzer</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap"
+          rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="background-glow glow-one"></div>
+    <div class="background-glow glow-two"></div>
+
+    <header class="navbar">
+
+        <div class="brand">
+            <div class="brand-icon">🎬</div>
+
+            <div>
+                <div class="brand-name">REVIEW<span>AI</span></div>
+                <div class="brand-subtitle">INTELLIGENT MOVIE ANALYSIS</div>
+            </div>
+        </div>
+
+        <div class="nav-status">
+            <span class="status-dot"></span>
+            AI SYSTEM ONLINE
+        </div>
+
+    </header>
+
+
+    <main class="container">
+
+        <!-- HERO -->
+
+        <section class="hero">
+
+            <div class="hero-badge">
+                ✦ MACHINE LEARNING · NLP · AI
+            </div>
+
+            <h1>
+                Understand the
+                <span>Emotion</span>
+                Behind Every Review.
+            </h1>
+
+            <p class="hero-description">
+                Transform movie reviews into meaningful insights using
+                sentiment analysis, emotion detection, aspect analysis,
+                and explainable machine learning.
+            </p>
+
+        </section>
+
+
+        <!-- REVIEW INPUT -->
+
+        <section class="review-card">
+
+            <div class="section-header">
+
+                <div>
+                    <div class="section-label">01 · INPUT</div>
+
+                    <h2>
+                        Tell us what you thought.
+                    </h2>
+                </div>
+
+                <div class="film-icon">✦</div>
+
+            </div>
+
+            <form id="reviewForm">
+
+                <textarea
+                    id="review"
+                    name="review"
+                    placeholder="Write or paste your movie review here..."
+                    required></textarea>
+
+                <div class="input-footer">
+
+                    <span id="characterCount">
+                        0 characters
+                    </span>
+
+                    <button
+                        type="submit"
+                        id="analyzeButton">
+
+                        <span>Analyze Review</span>
+                        <span class="button-arrow">→</span>
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+        <!-- LOADING -->
+
+        <div id="loading" class="loading hidden">
+
+            <div class="loader"></div>
+
+            <span>
+                Analyzing your review...
+            </span>
+
+        </div>
+
+
+        <!-- RESULTS -->
+
+        <section id="results" class="results hidden">
+
+            <div class="results-heading">
+
+                <div>
+                    <div class="section-label">02 · ANALYSIS</div>
+
+                    <h2>
+                        Your Review, Decoded.
+                    </h2>
+                </div>
+
+                <div class="analysis-line"></div>
+
+            </div>
+
+
+            <!-- TOP RESULT CARDS -->
+
+            <div class="result-grid">
+
+                <!-- SENTIMENT -->
+
+                <div class="result-card sentiment-card">
+
+                    <div class="card-label">
+                        🎯 SENTIMENT
+                    </div>
+
+                    <div id="sentiment"
+                         class="sentiment-value">
+                        —
+                    </div>
+
+                    <div class="confidence-text">
+                        Confidence
+                    </div>
+
+                    <div class="confidence-bar">
+                        <div id="confidenceBar"
+                             class="confidence-fill">
+                        </div>
+                    </div>
+
+                    <div id="confidence"
+                         class="confidence-value">
+                        —
+                    </div>
+
+                    <div class="probabilities">
+
+                        <div>
+                            <span>Positive</span>
+                            <strong id="positiveProbability">
+                                —
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Negative</span>
+                            <strong id="negativeProbability">
+                                —
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- EMOTIONS -->
+
+                <div class="result-card">
+
+                    <div class="card-label">
+                        😊 EMOTIONS
+                    </div>
+
+                    <div id="emotions"
+                         class="emotion-list">
+                    </div>
+
+                </div>
+
+
+                <!-- REVIEW QUALITY -->
+
+                <div class="result-card">
+
+                    <div class="card-label">
+                        📝 REVIEW QUALITY
+                    </div>
+
+                    <div id="quality"
+                         class="quality-list">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ASPECTS -->
+
+            <div class="large-card">
+
+                <div class="card-label">
+                    🎬 ASPECT ANALYSIS
+                </div>
+
+                <div id="aspects"
+                     class="aspect-grid">
+                </div>
+
+            </div>
+
+
+            <!-- EXPLANATION -->
+
+            <div class="large-card explanation-card">
+
+                <div class="card-label">
+                    🧠 WHY THE MODEL THINKS THIS
+                </div>
+
+                <p class="explanation-intro">
+                    These words had the strongest influence
+                    on the model's prediction.
+                </p>
+
+                <div class="influence-grid">
+
+                    <div>
+
+                        <h3 class="positive-title">
+                            Positive Influences
+                        </h3>
+
+                        <div id="positiveWords"
+                             class="word-list">
+                        </div>
+
+                    </div>
+
+                    <div>
+
+                        <h3 class="negative-title">
+                            Negative Influences
+                        </h3>
+
+                        <div id="negativeWords"
+                             class="word-list">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- FOOTER -->
+
+        <footer>
+
+            <div>
+                REVIEW<span>AI</span>
+            </div>
+
+            <p>
+                Machine Learning · Natural Language Processing ·
+                Explainable AI
+            </p>
+
+        </footer>
+
+    </main>
+
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>
