@@ -1,287 +1,207 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Intelligent Movie Review Analyzer</title>
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
+    <title>ReviewAI — Intelligent Movie Review Analysis</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap"
-          rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
-    <div class="background-glow glow-one"></div>
-    <div class="background-glow glow-two"></div>
+<!-- NAVIGATION -->
+<header class="nav">
+    <div class="nav-inner">
 
-    <header class="navbar">
+        <a class="brand" href="#">
+            <span class="brand-mark">R</span>
+            <span>review<span class="brand-ai">ai</span></span>
+        </a>
 
-        <div class="brand">
-            <div class="brand-icon">🎬</div>
-
-            <div>
-                <div class="brand-name">REVIEW<span>AI</span></div>
-                <div class="brand-subtitle">INTELLIGENT MOVIE ANALYSIS</div>
-            </div>
-        </div>
-
-        <div class="nav-status">
+        <div class="status">
             <span class="status-dot"></span>
-            AI SYSTEM ONLINE
+            Analysis engine online
         </div>
 
-    </header>
+    </div>
+</header>
 
 
-    <main class="container">
+<!-- HERO -->
+<main>
 
-        <!-- HERO -->
+<section class="hero">
 
-        <section class="hero">
+    <div class="hero-copy">
 
-            <div class="hero-badge">
-                ✦ MACHINE LEARNING · NLP · AI
-            </div>
+        <div class="eyebrow">
+            INTELLIGENT REVIEW ANALYSIS
+        </div>
 
-            <h1>
-                Understand the
-                <span>Emotion</span>
-                Behind Every Review.
-            </h1>
+        <h1>
+            Every review<br>
+            <em>has something to say.</em>
+        </h1>
 
-            <p class="hero-description">
-                Transform movie reviews into meaningful insights using
-                sentiment analysis, emotion detection, aspect analysis,
-                and explainable machine learning.
-            </p>
+        <p>
+            Understand sentiment, emotional signals and the language
+            behind a movie review — in seconds.
+        </p>
 
-        </section>
-
-
-        <!-- REVIEW INPUT -->
-
-        <section class="review-card">
-
-            <div class="section-header">
-
-                <div>
-                    <div class="section-label">01 · INPUT</div>
-
-                    <h2>
-                        Tell us what you thought.
-                    </h2>
-                </div>
-
-                <div class="film-icon">✦</div>
-
-            </div>
-
-            <form id="reviewForm">
-
-                <textarea
-                    id="review"
-                    name="review"
-                    placeholder="Write or paste your movie review here..."
-                    required></textarea>
-
-                <div class="input-footer">
-
-                    <span id="characterCount">
-                        0 characters
-                    </span>
-
-                    <button
-                        type="submit"
-                        id="analyzeButton">
-
-                        <span>Analyze Review</span>
-                        <span class="button-arrow">→</span>
-
-                    </button>
-
-                </div>
-
-            </form>
-
-        </section>
+    </div>
 
 
-        <!-- LOADING -->
+    <!-- INPUT -->
+    <div class="review-panel">
 
-        <div id="loading" class="loading hidden">
+        <div class="panel-top">
+            <span>Your review</span>
 
-            <div class="loader"></div>
-
-            <span>
-                Analyzing your review...
+            <span class="model-label">
+                <span class="model-dot"></span>
+                Logistic Regression
             </span>
+        </div>
+
+        <textarea
+            id="reviewInput"
+            maxlength="5000"
+            placeholder="Write or paste a movie review here..."
+        ></textarea>
+
+        <div class="input-bottom">
+
+            <span id="charCount">0 / 5000</span>
+
+            <button id="analyzeButton">
+                <span>Analyze review</span>
+                <span class="button-arrow">↗</span>
+            </button>
 
         </div>
 
+        <div class="examples">
 
-        <!-- RESULTS -->
+            <span>Try an example</span>
 
-        <section id="results" class="results hidden">
+            <button class="example-button"
+                data-review="A beautiful film with excellent performances and a moving story. The music was fantastic and the ending was unforgettable.">
+                Positive
+            </button>
 
-            <div class="results-heading">
+            <button class="example-button"
+                data-review="The movie looked good but the story was painfully slow. The acting felt weak and the ending was disappointing.">
+                Negative
+            </button>
 
-                <div>
-                    <div class="section-label">02 · ANALYSIS</div>
+            <button class="example-button"
+                data-review="An entertaining movie with a few great moments, although the middle section felt unnecessarily long.">
+                Mixed
+            </button>
 
-                    <h2>
-                        Your Review, Decoded.
-                    </h2>
-                </div>
+        </div>
 
-                <div class="analysis-line"></div>
+    </div>
 
+</section>
+
+
+<!-- LOADING -->
+<section id="loadingSection" class="loading-section hidden">
+
+    <div class="loader"></div>
+
+    <div>
+        <strong>Reading your review</strong>
+        <span>Analyzing language and emotional signals...</span>
+    </div>
+
+</section>
+
+
+<!-- RESULTS -->
+<section id="resultsSection" class="results hidden">
+
+    <div class="results-heading">
+        <div>
+            <span class="eyebrow">ANALYSIS</span>
+            <h2>What your review reveals</h2>
+        </div>
+
+        <button id="newAnalysisButton" class="secondary-button">
+            New analysis
+        </button>
+    </div>
+
+
+    <!-- MAIN SENTIMENT -->
+    <div class="analysis-grid">
+
+        <article class="sentiment-card">
+
+            <div class="card-label">
+                OVERALL SENTIMENT
             </div>
 
+            <div class="sentiment-content">
 
-            <!-- TOP RESULT CARDS -->
+                <div class="donut-wrap">
+                    <canvas id="sentimentChart"></canvas>
 
-            <div class="result-grid">
-
-                <!-- SENTIMENT -->
-
-                <div class="result-card sentiment-card">
-
-                    <div class="card-label">
-                        🎯 SENTIMENT
+                    <div class="donut-center">
+                        <strong id="confidenceValue">0%</strong>
+                        <span>confidence</span>
                     </div>
+                </div>
 
-                    <div id="sentiment"
-                         class="sentiment-value">
-                        —
-                    </div>
 
-                    <div class="confidence-text">
-                        Confidence
-                    </div>
+                <div class="sentiment-info">
 
-                    <div class="confidence-bar">
-                        <div id="confidenceBar"
-                             class="confidence-fill">
-                        </div>
-                    </div>
+                    <span class="small-label">Prediction</span>
 
-                    <div id="confidence"
-                         class="confidence-value">
-                        —
-                    </div>
+                    <h3 id="sentimentValue">—</h3>
+
+                    <p>
+                        The model's confidence is based on the
+                        language patterns found in your review.
+                    </p>
 
                     <div class="probabilities">
 
-                        <div>
-                            <span>Positive</span>
-                            <strong id="positiveProbability">
-                                —
-                            </strong>
+                        <div class="probability-row">
+
+                            <div>
+                                <span>Positive</span>
+                                <strong id="positiveProbability">0%</strong>
+                            </div>
+
+                            <div class="probability-track">
+                                <span id="positiveTrack"></span>
+                            </div>
+
                         </div>
 
-                        <div>
-                            <span>Negative</span>
-                            <strong id="negativeProbability">
-                                —
-                            </strong>
-                        </div>
 
-                    </div>
+                        <div class="probability-row">
 
-                </div>
+                            <div>
+                                <span>Negative</span>
+                                <strong id="negativeProbability">0%</strong>
+                            </div>
 
+                            <div class="probability-track">
+                                <span id="negativeTrack"></span>
+                            </div>
 
-                <!-- EMOTIONS -->
-
-                <div class="result-card">
-
-                    <div class="card-label">
-                        😊 EMOTIONS
-                    </div>
-
-                    <div id="emotions"
-                         class="emotion-list">
-                    </div>
-
-                </div>
-
-
-                <!-- REVIEW QUALITY -->
-
-                <div class="result-card">
-
-                    <div class="card-label">
-                        📝 REVIEW QUALITY
-                    </div>
-
-                    <div id="quality"
-                         class="quality-list">
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- ASPECTS -->
-
-            <div class="large-card">
-
-                <div class="card-label">
-                    🎬 ASPECT ANALYSIS
-                </div>
-
-                <div id="aspects"
-                     class="aspect-grid">
-                </div>
-
-            </div>
-
-
-            <!-- EXPLANATION -->
-
-            <div class="large-card explanation-card">
-
-                <div class="card-label">
-                    🧠 WHY THE MODEL THINKS THIS
-                </div>
-
-                <p class="explanation-intro">
-                    These words had the strongest influence
-                    on the model's prediction.
-                </p>
-
-                <div class="influence-grid">
-
-                    <div>
-
-                        <h3 class="positive-title">
-                            Positive Influences
-                        </h3>
-
-                        <div id="positiveWords"
-                             class="word-list">
-                        </div>
-
-                    </div>
-
-                    <div>
-
-                        <h3 class="negative-title">
-                            Negative Influences
-                        </h3>
-
-                        <div id="negativeWords"
-                             class="word-list">
                         </div>
 
                     </div>
@@ -290,28 +210,185 @@
 
             </div>
 
-        </section>
+        </article>
 
 
-        <!-- FOOTER -->
+        <!-- QUALITY -->
+        <article class="snapshot-card">
 
-        <footer>
+            <div class="card-label">
+                REVIEW SNAPSHOT
+            </div>
+
+            <div id="qualityContainer" class="quality-grid"></div>
+
+        </article>
+
+    </div>
+
+
+    <!-- EMOTION -->
+    <article class="wide-card emotion-card">
+
+        <div class="section-heading">
 
             <div>
-                REVIEW<span>AI</span>
+                <span class="card-label">EMOTIONAL SIGNAL</span>
+                <h3>How the review feels</h3>
             </div>
 
-            <p>
-                Machine Learning · Natural Language Processing ·
-                Explainable AI
-            </p>
+            <span class="section-note">Detected from language</span>
 
-        </footer>
+        </div>
 
-    </main>
+        <div class="emotion-layout">
+
+            <div class="emotion-chart">
+                <canvas id="emotionChart"></canvas>
+            </div>
+
+            <div class="emotion-description">
+                <span class="description-number">01</span>
+
+                <h4>Emotion beyond sentiment</h4>
+
+                <p>
+                    Sentiment tells us whether the review leans positive
+                    or negative. Emotion reveals the tone underneath it.
+                </p>
+            </div>
+
+        </div>
+
+    </article>
 
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <!-- ASPECTS -->
+    <article class="wide-card">
+
+        <div class="section-heading">
+
+            <div>
+                <span class="card-label">MOVIE ASPECTS</span>
+                <h3>What the reviewer talks about</h3>
+            </div>
+
+        </div>
+
+        <div id="aspectsContainer" class="aspects-list"></div>
+
+    </article>
+
+
+    <!-- LANGUAGE -->
+    <article class="wide-card language-card">
+
+        <div class="section-heading">
+
+            <div>
+                <span class="card-label">LANGUAGE SIGNALS</span>
+                <h3>Words influencing the prediction</h3>
+            </div>
+
+        </div>
+
+        <div class="language-columns">
+
+            <div class="language-group positive-group">
+                <div class="language-title">
+                    <span class="signal-dot"></span>
+                    Positive influence
+                </div>
+                <div id="positiveWords" class="word-list"></div>
+            </div>
+
+            <div class="language-group negative-group">
+                <div class="language-title">
+                    <span class="signal-dot"></span>
+                    Negative influence
+                </div>
+                <div id="negativeWords" class="word-list"></div>
+            </div>
+
+        </div>
+
+    </article>
+
+
+    <!-- FOOTNOTE -->
+    <div class="analysis-note">
+        Analysis generated using TF-IDF features and a Logistic Regression
+        text-classification model trained on IMDb movie reviews.
+    </div>
+
+</section>
+
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+
+    <div class="how-intro">
+        <span class="eyebrow">BEHIND THE ANALYSIS</span>
+
+        <h2>
+            From words<br>
+            to insight.
+        </h2>
+
+        <p>
+            ReviewAI combines classic machine learning with
+            natural language processing to turn unstructured
+            movie reviews into understandable signals.
+        </p>
+    </div>
+
+
+    <div class="steps">
+
+        <div class="step">
+            <span>01</span>
+            <h3>Clean</h3>
+            <p>Raw review text is cleaned and normalized.</p>
+        </div>
+
+        <div class="step">
+            <span>02</span>
+            <h3>Represent</h3>
+            <p>TF-IDF converts language into meaningful numerical features.</p>
+        </div>
+
+        <div class="step">
+            <span>03</span>
+            <h3>Classify</h3>
+            <p>The trained model predicts the review sentiment.</p>
+        </div>
+
+        <div class="step">
+            <span>04</span>
+            <h3>Explain</h3>
+            <p>Emotion, aspects and influential words add context.</p>
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<footer>
+
+    <div class="footer-brand">
+        <span class="brand-mark">R</span>
+        reviewai
+    </div>
+
+    <span>Intelligent Movie Review Analysis</span>
+
+</footer>
+
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
 
 </body>
 </html>

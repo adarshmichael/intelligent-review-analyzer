@@ -1,53 +1,79 @@
+let sentimentChart = null;
+let emotionChart = null;
 
-const reviewInput = document.getElementById("review");
-const reviewForm = document.getElementById("reviewForm");
+const reviewInput = document.getElementById("reviewInput");
+const charCount = document.getElementById("charCount");
 const analyzeButton = document.getElementById("analyzeButton");
-
-const characterCount = document.getElementById("characterCount");
-
-const loading = document.getElementById("loading");
-const results = document.getElementById("results");
+const loadingSection = document.getElementById("loadingSection");
+const resultsSection = document.getElementById("resultsSection");
+const newAnalysisButton = document.getElementById("newAnalysisButton");
 
 
-// -----------------------------
-// CHARACTER COUNTER
-// -----------------------------
+/* CHARACTER COUNT */
 
 reviewInput.addEventListener("input", () => {
+    charCount.textContent = `${reviewInput.value.length} / 5000`;
+});
 
-    const count = reviewInput.value.length;
 
-    characterCount.textContent =
-        `${count.toLocaleString()} characters`;
+/* EXAMPLES */
+
+document.querySelectorAll(".example-button").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        reviewInput.value = button.dataset.review;
+
+        reviewInput.dispatchEvent(new Event("input"));
+
+        reviewInput.focus();
+
+        window.scrollTo({
+            top: reviewInput.getBoundingClientRect().top + window.scrollY - 120,
+            behavior: "smooth"
+        });
+
+    });
 
 });
 
 
-// -----------------------------
-// FORM SUBMISSION
-// -----------------------------
+/* NEW ANALYSIS */
 
-reviewForm.addEventListener("submit", async (event) => {
+newAnalysisButton.addEventListener("click", () => {
 
-    event.preventDefault();
+    resultsSection.classList.add("hidden");
+
+    reviewInput.focus();
+
+    window.scrollTo({
+        top: reviewInput.getBoundingClientRect().top + window.scrollY - 100,
+        behavior: "smooth"
+    });
+
+});
+
+
+/* ANALYZE */
+
+analyzeButton.addEventListener("click", async () => {
 
     const review = reviewInput.value.trim();
 
     if (!review) {
-        alert("Please enter a movie review.");
+
+        reviewInput.focus();
+
         return;
     }
 
 
-    // Show loading
+    resultsSection.classList.add("hidden");
 
-    loading.classList.remove("hidden");
-    results.classList.add("hidden");
+    loadingSection.classList.remove("hidden");
 
     analyzeButton.disabled = true;
-
-    analyzeButton.querySelector("span:first-child")
-        .textContent = "Analyzing...";
+    analyzeButton.style.opacity = ".6";
 
 
     try {
@@ -71,11 +97,7 @@ reviewForm.addEventListener("submit", async (event) => {
 
 
         if (!response.ok) {
-
-            throw new Error(
-                data.error || "Analysis failed."
-            );
-
+            throw new Error(data.error || "Analysis failed.");
         }
 
 
@@ -84,283 +106,70 @@ reviewForm.addEventListener("submit", async (event) => {
 
     } catch (error) {
 
-        alert(
-            "Something went wrong:\n\n" +
-            error.message
-        );
+        alert(error.message);
 
     } finally {
 
-        loading.classList.add("hidden");
+        loadingSection.classList.add("hidden");
 
         analyzeButton.disabled = false;
-
-        analyzeButton.querySelector("span:first-child")
-            .textContent = "Analyze Review";
+        analyzeButton.style.opacity = "1";
 
     }
 
 });
 
 
-// -----------------------------
-// DISPLAY RESULTS
-// -----------------------------
+/* DISPLAY RESULTS */
 
 function displayResults(data) {
 
-    results.classList.remove("hidden");
+    resultsSection.classList.remove("hidden");
 
 
-    // -------------------------
-    // SENTIMENT
-    // -------------------------
+    const sentiment = data.sentiment;
+    const confidence = data.confidence * 100;
 
-    const sentimentElement =
-        document.getElementById("sentiment");
+    const positive = data.positive_probability * 100;
+    const negative = data.negative_probability * 100;
 
-    sentimentElement.textContent =
-        data.sentiment.toUpperCase();
 
+    document.getElementById("sentimentValue").textContent = sentiment;
 
-    const confidence =
-        data.confidence * 100;
+    document.getElementById("confidenceValue").textContent =
+        `${confidence.toFixed(0)}%`;
 
-    document.getElementById("confidence")
-        .textContent =
-        `${confidence.toFixed(2)}%`;
+    document.getElementById("positiveProbability").textContent =
+        `${positive.toFixed(1)}%`;
 
+    document.getElementById("negativeProbability").textContent =
+        `${negative.toFixed(1)}%`;
 
-    document.getElementById("confidenceBar")
-        .style.width =
-        `${confidence}%`;
 
+    document.getElementById("positiveTrack").style.width =
+        `${positive}%`;
 
-    document.getElementById("positiveProbability")
-        .textContent =
-        `${(data.positive_probability * 100).toFixed(2)}%`;
+    document.getElementById("negativeTrack").style.width =
+        `${negative}%`;
 
 
-    document.getElementById("negativeProbability")
-        .textContent =
-        `${(data.negative_probability * 100).toFixed(2)}%`;
+    renderSentimentChart(positive, negative);
 
+    renderQuality(data.quality);
 
-    // -------------------------
-    // EMOTIONS
-    // -------------------------
+    renderEmotions(data.emotions);
 
-    const emotionsContainer =
-        document.getElementById("emotions");
+    renderAspects(data.aspects);
 
-    emotionsContainer.innerHTML = "";
+    renderWords(
+        data.positive_features,
+        data.negative_features
+    );
 
-
-    data.emotions.forEach(emotion => {
-
-        const percentage =
-            emotion.score * 100;
-
-
-        const item =
-            document.createElement("div");
-
-        item.className =
-            "emotion-item";
-
-
-        item.innerHTML = `
-
-            <span class="emotion-name">
-                ${capitalize(emotion.label)}
-            </span>
-
-            <div class="emotion-bar">
-                <div
-                    class="emotion-fill"
-                    style="width:${percentage}%">
-                </div>
-            </div>
-
-            <span class="emotion-score">
-                ${percentage.toFixed(1)}%
-            </span>
-
-        `;
-
-
-        emotionsContainer.appendChild(item);
-
-    });
-
-
-    // -------------------------
-    // REVIEW QUALITY
-    // -------------------------
-
-    const quality =
-        data.quality;
-
-    const qualityContainer =
-        document.getElementById("quality");
-
-
-    qualityContainer.innerHTML = `
-
-        <div class="quality-item">
-            <span>Words</span>
-            <strong>${quality.word_count}</strong>
-        </div>
-
-        <div class="quality-item">
-            <span>Characters</span>
-            <strong>${quality.character_count}</strong>
-        </div>
-
-        <div class="quality-item">
-            <span>Sentences</span>
-            <strong>${quality.sentence_count}</strong>
-        </div>
-
-        <div class="quality-item">
-            <span>Avg Words / Sentence</span>
-            <strong>
-                ${quality.average_words_per_sentence.toFixed(1)}
-            </strong>
-        </div>
-
-        <div class="quality-item">
-            <span>Length</span>
-            <strong>${quality.review_length}</strong>
-        </div>
-
-        <div class="quality-item">
-            <span>Quality</span>
-            <strong>${quality.quality}</strong>
-        </div>
-
-    `;
-
-
-    // -------------------------
-    // ASPECTS
-    // -------------------------
-
-    const aspectsContainer =
-        document.getElementById("aspects");
-
-    aspectsContainer.innerHTML = "";
-
-
-    if (data.aspects.length === 0) {
-
-        aspectsContainer.innerHTML = `
-            <div class="aspect-item">
-                <div class="aspect-name">
-                    No aspects detected
-                </div>
-            </div>
-        `;
-
-    } else {
-
-        data.aspects.forEach(aspect => {
-
-            const percentage =
-                aspect.confidence * 100;
-
-
-            const item =
-                document.createElement("div");
-
-            item.className =
-                "aspect-item";
-
-
-            item.innerHTML = `
-
-                <div class="aspect-name">
-                    ${aspect.aspect}
-                </div>
-
-                <div class="aspect-sentiment">
-                    ${capitalize(aspect.sentiment)}
-                </div>
-
-                <div class="aspect-confidence">
-                    Confidence:
-                    ${percentage.toFixed(2)}%
-                </div>
-
-            `;
-
-
-            aspectsContainer.appendChild(item);
-
-        });
-
-    }
-
-
-    // -------------------------
-    // POSITIVE WORDS
-    // -------------------------
-
-    const positiveContainer =
-        document.getElementById("positiveWords");
-
-    positiveContainer.innerHTML = "";
-
-
-    data.positive_features.forEach(item => {
-
-        const word =
-            document.createElement("span");
-
-        word.className =
-            "word-tag";
-
-        word.textContent =
-            `✓ ${item[0]}`;
-
-        positiveContainer.appendChild(word);
-
-    });
-
-
-    // -------------------------
-    // NEGATIVE WORDS
-    // -------------------------
-
-    const negativeContainer =
-        document.getElementById("negativeWords");
-
-    negativeContainer.innerHTML = "";
-
-
-    data.negative_features.forEach(item => {
-
-        const word =
-            document.createElement("span");
-
-        word.className =
-            "word-tag";
-
-        word.textContent =
-            `✗ ${item[0]}`;
-
-        negativeContainer.appendChild(word);
-
-    });
-
-
-    // -------------------------
-    // SCROLL TO RESULTS
-    // -------------------------
 
     setTimeout(() => {
 
-        results.scrollIntoView({
+        resultsSection.scrollIntoView({
             behavior: "smooth",
             block: "start"
         });
@@ -370,17 +179,361 @@ function displayResults(data) {
 }
 
 
-// -----------------------------
-// HELPER
-// -----------------------------
+/* SENTIMENT CHART */
 
-function capitalize(text) {
+function renderSentimentChart(positive, negative) {
 
-    if (!text) {
-        return "";
+    const ctx = document
+        .getElementById("sentimentChart")
+        .getContext("2d");
+
+
+    if (sentimentChart) {
+        sentimentChart.destroy();
     }
 
-    return text.charAt(0).toUpperCase() +
-           text.slice(1);
+
+    sentimentChart = new Chart(ctx, {
+
+        type: "doughnut",
+
+        data: {
+
+            labels: ["Positive", "Negative"],
+
+            datasets: [{
+
+                data: [positive, negative],
+
+                backgroundColor: [
+                    "#8fc9a4",
+                    "#df8f9b"
+                ],
+
+                borderWidth: 0,
+
+                hoverOffset: 3
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            cutout: "78%",
+
+            plugins: {
+
+                legend: {
+                    display: false
+                },
+
+                tooltip: {
+                    callbacks: {
+                        label: context =>
+                            `${context.label}: ${context.raw.toFixed(1)}%`
+                    }
+                }
+
+            }
+
+        }
+
+    });
+
+}
+
+
+/* QUALITY */
+
+function renderQuality(quality) {
+
+    const container =
+        document.getElementById("qualityContainer");
+
+
+    container.innerHTML = `
+
+        <div class="quality-item">
+            <span class="quality-value">
+                ${quality.word_count}
+            </span>
+            <span class="quality-name">
+                Words
+            </span>
+        </div>
+
+        <div class="quality-item">
+            <span class="quality-value">
+                ${quality.character_count}
+            </span>
+            <span class="quality-name">
+                Characters
+            </span>
+        </div>
+
+        <div class="quality-item">
+            <span class="quality-value">
+                ${quality.sentence_count}
+            </span>
+            <span class="quality-name">
+                Sentences
+            </span>
+        </div>
+
+        <div class="quality-item">
+            <span class="quality-value">
+                ${quality.quality}
+            </span>
+            <span class="quality-name">
+                Detail
+            </span>
+        </div>
+
+    `;
+
+}
+
+
+/* EMOTIONS */
+
+function renderEmotions(emotions) {
+
+    const labels = emotions.map(item => capitalize(item.label));
+    const values = emotions.map(item => item.score * 100);
+
+
+    const ctx = document
+        .getElementById("emotionChart")
+        .getContext("2d");
+
+
+    if (emotionChart) {
+        emotionChart.destroy();
+    }
+
+
+    emotionChart = new Chart(ctx, {
+
+        type: "bar",
+
+        data: {
+
+            labels: labels,
+
+            datasets: [{
+
+                data: values,
+
+                backgroundColor: [
+                    "#a99cff",
+                    "#8175d7",
+                    "#655aa9"
+                ],
+
+                borderRadius: 4,
+
+                barThickness: 18
+
+            }]
+
+        },
+
+        options: {
+
+            indexAxis: "y",
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            scales: {
+
+                x: {
+
+                    beginAtZero: true,
+
+                    max: 100,
+
+                    grid: {
+                        color: "rgba(255,255,255,.05)"
+                    },
+
+                    ticks: {
+                        color: "#777873",
+                        font: {
+                            size: 10
+                        },
+
+                        callback: value => `${value}%`
+                    }
+
+                },
+
+                y: {
+
+                    grid: {
+                        display: false
+                    },
+
+                    ticks: {
+                        color: "#b7b5b0",
+                        font: {
+                            size: 11
+                        }
+                    }
+
+                }
+
+            },
+
+            plugins: {
+
+                legend: {
+                    display: false
+                },
+
+                tooltip: {
+                    callbacks: {
+                        label: context =>
+                            `${context.raw.toFixed(1)}%`
+                    }
+                }
+
+            }
+
+        }
+
+    });
+
+}
+
+
+/* ASPECTS */
+
+function renderAspects(aspects) {
+
+    const container =
+        document.getElementById("aspectsContainer");
+
+
+    if (!aspects || aspects.length === 0) {
+
+        container.innerHTML = `
+            <div style="
+                padding:25px 0;
+                color:#777873;
+                font-size:12px;
+            ">
+                No specific movie aspects were detected.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    container.innerHTML = aspects.map(item => {
+
+        const sentimentClass =
+            item.sentiment.toLowerCase() === "positive"
+                ? "aspect-positive"
+                : "aspect-negative";
+
+
+        return `
+
+            <div class="aspect-row">
+
+                <span class="aspect-name">
+                    ${escapeHtml(item.aspect)}
+                </span>
+
+                <span class="aspect-text">
+                    ${escapeHtml(item.text)}
+                </span>
+
+                <span class="aspect-sentiment ${sentimentClass}">
+                    ${escapeHtml(item.sentiment)}
+                    · ${(item.confidence * 100).toFixed(0)}%
+                </span>
+
+            </div>
+
+        `;
+
+    }).join("");
+
+}
+
+
+/* WORDS */
+
+function renderWords(positive, negative) {
+
+    const positiveContainer =
+        document.getElementById("positiveWords");
+
+    const negativeContainer =
+        document.getElementById("negativeWords");
+
+
+    positiveContainer.innerHTML =
+        renderWordChips(positive);
+
+
+    negativeContainer.innerHTML =
+        renderWordChips(negative);
+
+}
+
+
+function renderWordChips(words) {
+
+    if (!words || words.length === 0) {
+
+        return `
+            <span style="color:#777873;font-size:11px">
+                No strong signals detected
+            </span>
+        `;
+
+    }
+
+
+    return words.map(item => {
+
+        return `
+            <span class="word-chip">
+                ${escapeHtml(item[0])}
+            </span>
+        `;
+
+    }).join("");
+
+}
+
+
+/* HELPERS */
+
+function capitalize(value) {
+
+    return value.charAt(0).toUpperCase() +
+        value.slice(1);
+
+}
+
+
+function escapeHtml(value) {
+
+    const div = document.createElement("div");
+
+    div.textContent = value;
+
+    return div.innerHTML;
 
 }
